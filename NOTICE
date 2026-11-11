@@ -1,0 +1,14 @@
+CTYUN OOS Provider (terraform-provider-ctyunoos)
+
+This product includes software derived from:
+
+  Project:    hashicorp/terraform-provider-aws
+  URL:        https://github.com/hashicorp/terraform-provider-aws
+  Baseline:   v6.39.0
+  License:    Mozilla Public License 2.0 (MPL-2.0)
+
+The upstream code is Copyright (c) its respective contributors and, in the
+baseline release, is attributed to IBM Corp. 2014, 2026.
+
+Modifications for China Telecom Cloud OOS (Object-Oriented Storage) are Copyright (C)
+2026 China Telecom Cloud Technology Co., Ltd.

@@ -1,0 +1,52 @@
+# Copyright (C) 2026 China Telecom Cloud Technology Co., Ltd.
+# SPDX-License-Identifier: MPL-2.0
+
+# GoReleaser configuration for the CTYUN OOS Provider.
+#
+# Release assets follow the Terraform Registry naming conventions:
+#   terraform-provider-ctyunoos_<VERSION>_<OS>_<ARCH>.zip
+#   terraform-provider-ctyunoos_<VERSION>_SHA256SUMS(.sig)
+project_name: terraform-provider-ctyunoos
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    flags:
+      - -trimpath
+    ldflags:
+      - '-s -w -X github.com/ctyun-oos-lab/terraform-provider-ctyunoos/version.ProviderVersion={{ .Version }}'
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    binary: '{{ .ProjectName }}_v{{ .Version }}'
+
+archives:
+  - format: zip
+    name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+
+checksum:
+  name_template: '{{ .ProjectName }}_{{ .Version }}_SHA256SUMS'
+  algorithm: sha256
+
+# GPG signing is required for the OpenTofu Registry and recommended for the
+# Terraform Registry. Provide the key via the GPG_FINGERPRINT environment
+# variable (set by the release workflow from the GPG_PRIVATE_KEY secret).
+signs:
+  - artifacts: checksum
+    args:
+      - '--batch'
+      - '--local-user'
+      - '{{ .Env.GPG_FINGERPRINT }}'
+      - '--output'
+      - '${signature}'
+      - '--detach-sign'
+      - '${artifact}'
+
+release:
+  draft: true
+  prerelease: auto

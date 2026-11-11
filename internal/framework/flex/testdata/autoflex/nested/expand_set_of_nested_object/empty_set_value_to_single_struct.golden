@@ -1,0 +1,29 @@
+[
+  {
+    "@level": "info",
+    "@message": "Expanding",
+    "@module": "provider.autoflex",
+    "autoflex.source.type": "github.com/ctyun-oos-lab/terraform-provider-ctyunoos/internal/framework/types.SetNestedObjectValueOf[github.com/ctyun-oos-lab/terraform-provider-ctyunoos/internal/framework/flex.tfSingleStringField]",
+    "autoflex.target.type": "*github.com/ctyun-oos-lab/terraform-provider-ctyunoos/internal/framework/flex.awsSingleStringValue"
+  },
+  {
+    "@level": "info",
+    "@message": "Converting",
+    "@module": "provider.autoflex",
+    "autoflex.source.path": "",
+    "autoflex.source.type": "github.com/ctyun-oos-lab/terraform-provider-ctyunoos/internal/framework/types.SetNestedObjectValueOf[github.com/ctyun-oos-lab/terraform-provider-ctyunoos/internal/framework/flex.tfSingleStringField]",
+    "autoflex.target.path": "",
+    "autoflex.target.type": "github.com/ctyun-oos-lab/terraform-provider-ctyunoos/internal/framework/flex.awsSingleStringValue"
+  },
+  {
+    "@level": "trace",
+    "@message": "TRACE: nestedObjectCollection entry",
+    "@module": "provider.autoflex",
+    "autoflex.source.path": "",
+    "autoflex.source.type": "github.com/ctyun-oos-lab/terraform-provider-ctyunoos/internal/framework/types.SetNestedObjectValueOf[github.com/ctyun-oos-lab/terraform-provider-ctyunoos/internal/framework/flex.tfSingleStringField]",
+    "autoflex.target.path": "",
+    "autoflex.target.type": "github.com/ctyun-oos-lab/terraform-provider-ctyunoos/internal/framework/flex.awsSingleStringValue",
+    "xmlWrapper": false,
+    "xmlWrapperField": ""
+  }
+]

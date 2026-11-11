@@ -1,0 +1,83 @@
+// Copyright IBM Corp. 2014, 2026
+// SPDX-License-Identifier: MPL-2.0
+
+//go:build generate
+
+package main
+
+import (
+	"cmp"
+	_ "embed"
+	"slices"
+	"strings"
+
+	"github.com/ctyun-oos-lab/terraform-provider-ctyunoos/internal/generate/common"
+	"github.com/ctyun-oos-lab/terraform-provider-ctyunoos/names/data"
+)
+
+type serviceDatum struct {
+	ProviderPackage  string
+	Aliases          []string
+	TfAwsEnvVar      string
+	DeprecatedEnvVar string
+	AwsEnvVar        string
+	CustomEnvVar     string // CustomEnvVar is the name of the OOS custom endpoint environment variable, used to generate the expandEndpointCustomEnvVar call.
+}
+
+type TemplateData struct {
+	Services []serviceDatum
+}
+
+func main() {
+	const (
+		filename = `../../../internal/provider/sdkv2/provider_gen.go`
+	)
+	g := common.NewGenerator()
+
+	g.Infof("Generating %s", strings.TrimPrefix(filename, "../../../"))
+
+	data, err := data.ReadAllServiceData()
+	if err != nil {
+		g.Fatalf("error reading service data: %s", err)
+	}
+
+	td := TemplateData{}
+
+	for _, l := range data {
+		if l.Exclude() {
+			continue
+		}
+
+		if l.NotImplemented() && !l.EndpointOnly() {
+			continue
+		}
+
+		sd := serviceDatum{
+			ProviderPackage:  l.ProviderPackage(),
+			Aliases:          l.Aliases(),
+			TfAwsEnvVar:      l.TFAWSEnvVar(),
+			DeprecatedEnvVar: l.DeprecatedEnvVar(),
+			AwsEnvVar:        l.AWSServiceEnvVar(),
+			CustomEnvVar:     l.CustomEnvVar(), // CustomEnvVar comes from custom_env_var in names_data.hcl, feeding the template to generate the custom endpoint environment variable reading logic.
+		}
+
+		td.Services = append(td.Services, sd)
+	}
+
+	slices.SortFunc(td.Services, func(a, b serviceDatum) int {
+		return cmp.Compare(a.ProviderPackage, b.ProviderPackage)
+	})
+
+	d := g.NewGoFileDestination(filename)
+
+	if err := d.BufferTemplate("endpoints-schema", tmpl, td); err != nil {
+		g.Fatalf("generating file (%s): %s", filename, err)
+	}
+
+	if err := d.Write(); err != nil {
+		g.Fatalf("generating file (%s): %s", filename, err)
+	}
+}
+
+//go:embed file.gtpl
+var tmpl string

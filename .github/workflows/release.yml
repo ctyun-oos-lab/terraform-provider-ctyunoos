@@ -1,0 +1,56 @@
+# Copyright (C) 2026 China Telecom Cloud Technology Co., Ltd.
+# SPDX-License-Identifier: MPL-2.0
+
+# Builds and signs release assets for the Terraform Registry and the OpenTofu
+# Registry, then drafts a GitHub release.
+#
+# Required repository secrets:
+#   GITHUB_TOKEN       — provided automatically by GitHub Actions
+#   GPG_PRIVATE_KEY    — ASCII-armored GPG private key used to sign checksums
+#   PASSPHRASE         — passphrase for GPG_PRIVATE_KEY (empty if the key is unprotected)
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  goreleaser:
+    name: GoReleaser
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+        with:
+          go-version-file: go.mod
+
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+
+      - name: Prepare release notes
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          awk -v ver="$VERSION" '
+            /^## / { if (found) exit; if ($0 ~ ("^## " ver " ")) found = 1 }
+            found
+          ' CHANGELOG.md > /tmp/release-notes.md
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: '~> v2'
+          args: release --clean --release-notes /tmp/release-notes.md
+        env:
+          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

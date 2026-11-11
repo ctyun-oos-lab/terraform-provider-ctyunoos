@@ -1,0 +1,13 @@
+{
+  "name": "terraform-provider-ctyunoos-markdownlint",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pinned markdownlint-cli2 for OOS website documentation checks",
+  "dependencies": {
+    "markdownlint-cli2": "0.23.2"
+  },
+  "overrides": {
+    "smol-toml": "1.8.0"
+  },
+  "comment": "overrides: markdownlint-cli2 0.23.2 pins smol-toml to vulnerable 1.7.0 (GHSA-7w5x-hrqm-74c2); force 1.8.0 until markdownlint-cli2 updates"
+}

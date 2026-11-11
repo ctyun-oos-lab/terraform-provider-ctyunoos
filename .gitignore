@@ -1,0 +1,50 @@
+# Editor / OS
+.*.swp
+*~
+.DS_Store
+.idea
+.vscode
+.vs
+*.iml
+
+# Go
+*.dll
+*.exe
+*.prof
+*.test
+bin/
+dist/
+pkg/
+vendor/
+
+# Terraform local state and artifacts
+.terraform/
+**/.terraform/
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+.terraform-plugin-cache/
+terraform-plugin-dir/
+terraform.tfplan
+terraform.tfstate
+./*.tfstate
+*.backup
+*.bak
+*.log
+log.txt
+
+# Provider build/test artifacts (see GNUmakefile)
+sweeper-bin
+/docscheck
+terraform-provider-ctyunoos
+
+# Generated code and temp files
+changelog.tmp
+release/
+.local/
+node_modules
+
+# Fork-local environment
+.env.oos.local
+AGENTS.md
+/.kiro
+/.bob

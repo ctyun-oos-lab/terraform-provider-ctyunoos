@@ -1,0 +1,8 @@
+<!-- Copyright (C) 2026 China Telecom Cloud Technology Co., Ltd. -->
+<!-- SPDX-License-Identifier: MPL-2.0 -->
+
+Fixed test fixture for the ctyun_oos_object source-backed upload.
+
+This file exists solely to provide stable byte content for the source-backed
+object test. Do not edit it, otherwise the hardcoded content_md5 in main.tf and
+the assertions in manual-tests/e2e.tftest.hcl must be updated to match.
